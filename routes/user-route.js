@@ -1,7 +1,10 @@
 import express from 'express'
 import { check, validationResult } from 'express-validator/check'
+import { insertOne } from 'db'
 
 const router = express.Router()
+
+const collectionName = 'users'
 
 router.post(
   '/',
@@ -9,7 +12,7 @@ router.post(
     check('email').isEmail(),
     check('username').isLength(3)
   ],
-  (req, res) => {
+  async (req, res) => {
     try {
       const user = req.body
       const errors = validationResult(req)
@@ -19,6 +22,7 @@ router.post(
       }
       // const user = req.body()
       console.log('user', user)
+      const ret = await insertOne(collectionName, user)
       res.send(user)
     } catch (e) {
       console.error('error', e)

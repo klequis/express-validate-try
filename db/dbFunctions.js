@@ -1,6 +1,7 @@
 import mongodb, { ObjectID } from 'mongodb'
 import { removeIdProp } from './helpers'
 import config from '../config'
+import { yellow } from 'logger'
 
 const MongoClient = mongodb.MongoClient
 
@@ -83,6 +84,8 @@ export const dropCollection = async collection => {
  *
  */
 export const insertOne = async (collection, data) => {
+  yellow('collection', collection)
+  yellow('data', data)
   try {
     const { db } = await connectDB()
     const ret = await db.collection(collection).insertOne(data)

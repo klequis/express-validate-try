@@ -1,23 +1,45 @@
 import { expect } from 'chai'
 import request from 'supertest'
 import app from 'server'
+import {
+  close,
+  dropCollection
+} from 'db'
 
 import { yellow } from 'logger'
 
-const userJoe = {
-  username: 'joe',
-  email: 'joejoe.com'
+after(async function() {
+  await close()
+})
+
+const userBad = {
+  username: 'good',
+  email: 'bad.com'
 }
 
+const userGood = {
+  username: 'good',
+  email: 'good@good.com'
+}
+
+
 describe.only('user-route POST', function() {
-  describe('test POST /api/users', function() {
-    it('should post 1 user', async function() {
-      const post = await request(app)
-        .post('/api/users')
-        .set('Accept', 'application/json')
-        .send(userJoe)
-      yellow('post.body', post.body)
-    })
+  before(async function() {
+    await dropCollection()
+  })
+  it('userBad', async function() {
+    const post = await request(app)
+      .post('/api/users')
+      .set('Accept', 'application/json')
+      .send(userBad)
+    yellow('userBad: post.body', post.body)
+  })
+  it('userGood', async function() {
+    const post = await request(app)
+      .post('/api/users')
+      .set('Accept', 'application/json')
+      .send(userGood)
+    yellow('userGood: post.body', post.body)
   })
 
 })
