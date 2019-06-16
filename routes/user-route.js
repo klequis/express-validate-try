@@ -1,6 +1,7 @@
 import express from 'express'
 import { check, validationResult } from 'express-validator/check'
 import { insertOne } from 'db'
+import { yellow } from 'logger'
 
 const router = express.Router()
 
@@ -21,8 +22,8 @@ router.post(
         return res.status(422).json({ errors: errors.array() })
       }
       // const user = req.body()
-      console.log('user', user)
       const ret = await insertOne(collectionName, user)
+      yellow('ret', ret)
       res.send(user)
     } catch (e) {
       console.error('error', e)
